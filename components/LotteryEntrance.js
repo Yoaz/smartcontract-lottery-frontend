@@ -104,36 +104,42 @@ export default function LotteryEntrance() {
         <div className="p-5">
             {lotteryAddress ? (
                 <div>
-                    <div>The current lottery state is: {lotteryState}</div>
                     {lotteryState ? (
-                        <div>Lottery is closed now!</div>
+                        <div className="font-bold">Lottery is closed now!</div>
                     ) : (
-                        <button
-                            className="bg-blue-400 hover:bg-blue-600 text-white py-2  px-4 rounded ml-auto "
-                            onClick={async function () {
-                                await enterRaffle({
-                                    onSuccess: handleSuccess,
-                                    onError: (error) => console.log(error),
-                                })
-                            }}
-                            disabled={isFetching || isFetching}
-                        >
-                            {isFetching || isLoading ? (
-                                <div>
-                                    <svg className="animate-spin ease h-3 w-3 rounded border-2 border-white inline"></svg>
-                                    <span className="px-2">Processing...</span>
-                                </div>
-                            ) : (
-                                <div>Enter Raffle</div>
-                            )}
-                        </button>
+                        <div>
+                            <h3 className="py-3 font-bold">Lottery is open, JOIN NOW!</h3>
+                            <div>
+                                <div>Current Price Pool: {lotteryTreasury / 1e18} ETH</div>
+                                <span> Entrance Fee: {entranceFee / 1e18} ETH --> </span>
+                                <button
+                                    className="bg-blue-400 hover:bg-blue-600 text-white py-2  px-4 rounded ml-auto "
+                                    onClick={async function () {
+                                        await enterRaffle({
+                                            onSuccess: handleSuccess,
+                                            onError: (error) => console.log(error),
+                                        })
+                                    }}
+                                    disabled={isFetching || isFetching}
+                                >
+                                    {isFetching || isLoading ? (
+                                        <div>
+                                            <svg className="animate-spin ease h-3 w-3 rounded border-2 border-white inline"></svg>
+                                            <span className="px-2">Processing...</span>
+                                        </div>
+                                    ) : (
+                                        <div>Enter Raffle</div>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
                     )}
-                    <div>Current Price Pool: {lotteryTreasury / 1e18} ETH</div>
-                    <div>Entrance Fee: {entranceFee / 1e18} ETH</div>
+                    <div></div>
+                    {}
                     <div>Recent Winner is: {recentWinner}</div>
                 </div>
             ) : (
-                <div>No Lottery Address Is Found!</div>
+                <div className="font-bold">No Lottery Address Is Found!</div>
             )}
         </div>
     )
