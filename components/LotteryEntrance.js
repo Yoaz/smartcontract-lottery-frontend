@@ -26,6 +26,7 @@ export default function LotteryEntrance() {
     const [lotteryState, setLotteryState] = useState("0")
     const [recentWinner, setRecentWinner] = useState("0")
     const [lotteryTreasury, setLotteryTreasury] = useState("0")
+    const [numOfParticipants, setNumOfParticipants] = useState("0")
 
     const dispatch = useNotification()
 
@@ -84,6 +85,13 @@ export default function LotteryEntrance() {
         params: {},
     })
 
+    const { runContractFunction: getNumOfParticipants } = useWeb3Contract({
+        abi: abi,
+        contractAddress: lotteryAddress,
+        functionName: "getNumOfParticipants",
+        params: {},
+    })
+
     useEffect(() => {
         if (isWeb3Enabled) {
             async function updateUI() {
@@ -91,14 +99,16 @@ export default function LotteryEntrance() {
                 const lotteryStateFromContractCall = await getLotteryState()
                 const recentWinnerFromContractCall = await getLotteryWinner()
                 const lotterytreasuryFromContractCall = (await getLotteryTreasury()).toString()
+                const numOfParticipantsFromContractCall = (await getNumOfParticipants()).toString()
                 setEntrancefee(entranceFeeFromContractCall)
                 setLotteryState(lotteryStateFromContractCall)
                 setRecentWinner(recentWinnerFromContractCall)
                 setLotteryTreasury(lotterytreasuryFromContractCall)
+                setNumOfParticipants(numOfParticipantsFromContractCall)
             }
             updateUI()
         }
-    }, [isWeb3Enabled])
+    }, [isWeb3Enabled, entranceFee, lotteryState, lotteryTreasury, numOfParticipants])
 
     return (
         <div className="p-5">
@@ -110,7 +120,9 @@ export default function LotteryEntrance() {
                         <div>
                             <h3 className="py-3 font-bold">Lottery is open, JOIN NOW!</h3>
                             <div>
-                                <div>Current Price Pool: {lotteryTreasury / 1e18} ETH</div>
+                                <div className="py-3">
+                                    Current Price Pool: {lotteryTreasury / 1e18} ETH
+                                </div>
                                 <span> Entrance Fee: {entranceFee / 1e18} ETH --> </span>
                                 <button
                                     className="bg-blue-400 hover:bg-blue-600 text-white py-2  px-4 rounded ml-auto "
@@ -134,9 +146,9 @@ export default function LotteryEntrance() {
                             </div>
                         </div>
                     )}
-                    <div></div>
+                    <div className="py-3">Current number of participants: {numOfParticipants}</div>
                     {}
-                    <div>Recent Winner is: {recentWinner}</div>
+                    <div className="py-3">Recent Winner is: {recentWinner}</div>
                 </div>
             ) : (
                 <div className="font-bold">No Lottery Address Is Found!</div>
